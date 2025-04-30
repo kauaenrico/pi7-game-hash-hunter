@@ -1,0 +1,18 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - ":80"
+    restart: unless-stopped
+    mem_limit: 512m
+    memswap_limit: -1
+    environment:
+      - NODE_ENV=production
+    networks:
+      - net_private
+
+networks:
+  net_private:
+    external: true
