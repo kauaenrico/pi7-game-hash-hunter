@@ -22,7 +22,7 @@ export class Virus {
     this.lastMoves = []; // Track last N moves
     this.maxMoveHistory = 15; // Increased move history
     this.moveCounter = 0; // Counter to control movement speed
-    this.moveDelay = 4; // Increased delay between moves
+    this.moveDelay = 12; // ALTERA AQUI A VELOCIDADE DO VIRUS
     this.stuckCounter = 0; // Counter to detect when virus is stuck
     this.addVisited(row, col);
   }
