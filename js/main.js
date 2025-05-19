@@ -459,6 +459,100 @@ function checkGameConditions() {
   }
 }
 
+// Função auxiliar para desenhar objetos padrão
+function drawDefaultObject(ctx, x, y, cellSize, type) {
+  const centerX = x + cellSize / 2;
+  const centerY = y + cellSize / 2;
+  const radius = cellSize / 3;
+
+  switch(type) {
+    case 'player':
+      // Desenhar jogador (círculo verde com detalhes)
+      ctx.fillStyle = '#7eff00';
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Detalhes do jogador (escudo)
+      ctx.fillStyle = '#004d00';
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius / 2, 0, Math.PI * 2);
+      ctx.fill();
+      break;
+
+    case 'virus':
+      // Desenhar vírus (círculo vermelho com detalhes)
+      ctx.fillStyle = '#ff3a3a';
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Detalhes do vírus (X)
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(centerX - radius/2, centerY - radius/2);
+      ctx.lineTo(centerX + radius/2, centerY + radius/2);
+      ctx.moveTo(centerX + radius/2, centerY - radius/2);
+      ctx.lineTo(centerX - radius/2, centerY + radius/2);
+      ctx.stroke();
+      break;
+
+    case 'hash':
+      // Desenhar hash (quadrado azul com #)
+      ctx.fillStyle = '#0066ff';
+      ctx.fillRect(x + cellSize/4, y + cellSize/4, cellSize/2, cellSize/2);
+      
+      // Desenhar # no centro
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2;
+      const hashSize = cellSize/4;
+      ctx.beginPath();
+      // Linha horizontal superior
+      ctx.moveTo(centerX - hashSize, centerY - hashSize/2);
+      ctx.lineTo(centerX + hashSize, centerY - hashSize/2);
+      // Linha horizontal inferior
+      ctx.moveTo(centerX - hashSize, centerY + hashSize/2);
+      ctx.lineTo(centerX + hashSize, centerY + hashSize/2);
+      // Linha vertical esquerda
+      ctx.moveTo(centerX - hashSize/2, centerY - hashSize);
+      ctx.lineTo(centerX - hashSize/2, centerY + hashSize);
+      // Linha vertical direita
+      ctx.moveTo(centerX + hashSize/2, centerY - hashSize);
+      ctx.lineTo(centerX + hashSize/2, centerY + hashSize);
+      ctx.stroke();
+      break;
+
+    case 'core':
+      // Desenhar core (círculo amarelo com brilho)
+      // Brilho
+      ctx.shadowColor = '#ffff99';
+      ctx.shadowBlur = 20;
+      ctx.fillStyle = '#fff700';
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      
+      // Borda
+      ctx.strokeStyle = '#ffd700';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius + 2, 0, Math.PI * 2);
+      ctx.stroke();
+      
+      // Detalhes do core (ondas)
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2;
+      for(let i = 0; i < 3; i++) {
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius - i*4, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      break;
+  }
+}
+
 // Modificar a função drawGame
 function drawGame() {
   // Desenhar elementos do jogo
@@ -473,6 +567,14 @@ function drawGame() {
         gameAssets.images.player.width,
         gameAssets.images.player.height
       );
+    } else {
+      drawDefaultObject(
+        ctx,
+        gameState.player.col * gameState.cellSize,
+        gameState.player.row * gameState.cellSize,
+        gameState.cellSize,
+        'player'
+      );
     }
 
     // Desenhar vírus
@@ -484,6 +586,14 @@ function drawGame() {
         gameState.virus.row * gameState.cellSize + (gameState.cellSize - gameAssets.images.virus.height) / 2,
         gameAssets.images.virus.width,
         gameAssets.images.virus.height
+      );
+    } else {
+      drawDefaultObject(
+        ctx,
+        gameState.virus.col * gameState.cellSize,
+        gameState.virus.row * gameState.cellSize,
+        gameState.cellSize,
+        'virus'
       );
     }
 
@@ -499,9 +609,19 @@ function drawGame() {
           gameAssets.images.hash.height
         );
       });
+    } else {
+      gameState.patches.forEach(patch => {
+        drawDefaultObject(
+          ctx,
+          patch.col * gameState.cellSize,
+          patch.row * gameState.cellSize,
+          gameState.cellSize,
+          'hash'
+        );
+      });
     }
 
-    // Desenhar endpoint
+    // Desenhar endpoint (core)
     const coreImg = getImage(gameAssets.images.core.path);
     if (coreImg) {
       ctx.drawImage(
@@ -511,54 +631,53 @@ function drawGame() {
         gameAssets.images.core.width,
         gameAssets.images.core.height
       );
+    } else {
+      drawDefaultObject(
+        ctx,
+        gameState.mazeSize.cols / 2 * gameState.cellSize,
+        gameState.mazeSize.rows / 2 * gameState.cellSize,
+        gameState.cellSize,
+        'core'
+      );
     }
   } else {
-    // Fallback para formas geométricas
+    // Fallback para todas as formas geométricas quando assets não estão carregados
     // Desenhar jogador
-    ctx.fillStyle = 'var(--color-player)';
-    ctx.beginPath();
-    ctx.arc(
-      gameState.player.col * gameState.cellSize + gameState.cellSize / 2,
-      gameState.player.row * gameState.cellSize + gameState.cellSize / 2,
-      gameState.cellSize / 3,
-      0,
-      Math.PI * 2
+    drawDefaultObject(
+      ctx,
+      gameState.player.col * gameState.cellSize,
+      gameState.player.row * gameState.cellSize,
+      gameState.cellSize,
+      'player'
     );
-    ctx.fill();
 
     // Desenhar vírus
-    ctx.fillStyle = 'var(--color-virus)';
-    ctx.beginPath();
-    ctx.arc(
-      gameState.virus.col * gameState.cellSize + gameState.cellSize / 2,
-      gameState.virus.row * gameState.cellSize + gameState.cellSize / 2,
-      gameState.cellSize / 3,
-      0,
-      Math.PI * 2
+    drawDefaultObject(
+      ctx,
+      gameState.virus.col * gameState.cellSize,
+      gameState.virus.row * gameState.cellSize,
+      gameState.cellSize,
+      'virus'
     );
-    ctx.fill();
 
     // Desenhar hashes
-    ctx.fillStyle = 'var(--color-hash)';
     gameState.patches.forEach(patch => {
-      ctx.fillRect(
-        patch.col * gameState.cellSize + gameState.cellSize / 4,
-        patch.row * gameState.cellSize + gameState.cellSize / 4,
-        gameState.cellSize / 2,
-        gameState.cellSize / 2
+      drawDefaultObject(
+        ctx,
+        patch.col * gameState.cellSize,
+        patch.row * gameState.cellSize,
+        gameState.cellSize,
+        'hash'
       );
     });
 
-    // Desenhar endpoint
-    ctx.fillStyle = 'var(--color-endpoint)';
-    ctx.beginPath();
-    ctx.arc(
-      gameState.mazeSize.cols / 2 * gameState.cellSize + gameState.cellSize / 2,
-      gameState.mazeSize.rows / 2 * gameState.cellSize + gameState.cellSize / 2,
-      gameState.cellSize / 3,
-      0,
-      Math.PI * 2
+    // Desenhar endpoint (core)
+    drawDefaultObject(
+      ctx,
+      gameState.mazeSize.cols / 2 * gameState.cellSize,
+      gameState.mazeSize.rows / 2 * gameState.cellSize,
+      gameState.cellSize,
+      'core'
     );
-    ctx.fill();
   }
 }
