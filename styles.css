@@ -65,8 +65,9 @@ h1 {
 }
 
 .game-status {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
   width: 100%;
   max-width: 600px;
   padding: 10px 15px;
@@ -78,10 +79,18 @@ h1 {
 .status-item {
   display: flex;
   gap: 8px;
+  align-items: center;
+  justify-content: center;
 }
 
 .status-item span:first-child {
   color: var(--color-primary);
+  font-weight: bold;
+}
+
+#timeDisplay {
+  font-family: 'Courier New', monospace;
+  letter-spacing: 1px;
 }
 
 #gameOverlay {
@@ -118,10 +127,53 @@ h1 {
   line-height: 1.5;
 }
 
+.story-text {
+  margin: 20px 0;
+  line-height: 1.6;
+  color: #e0e0e0;
+  font-size: 0.95rem;
+  text-align: left;
+  padding: 0 10px;
+}
+
+.story-text p {
+  margin-bottom: 12px;
+}
+
 .instructions {
   font-size: 0.9rem;
   margin: 20px 0;
   color: #aaaaaa;
+  text-align: left;
+  padding: 0 10px;
+}
+
+.instructions ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 10px 0;
+}
+
+.instructions li {
+  margin-bottom: 8px;
+  padding-left: 20px;
+  position: relative;
+}
+
+.instructions li:before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--color-primary);
+}
+
+.security-tip {
+  margin-top: 15px;
+  padding: 10px;
+  background-color: rgba(26, 136, 255, 0.1);
+  border-left: 3px solid var(--color-primary);
+  font-size: 0.9rem;
+  color: #7eff00;
 }
 
 button {
@@ -168,4 +220,55 @@ button:active {
     width: 90%;
     padding: 20px;
   }
+}
+
+/* Estilos para o pop-up de dicas de segurança */
+.security-tip-popup {
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(20, 20, 20, 0.9);
+  border-left: 4px solid var(--color-primary);
+  padding: 15px 20px;
+  border-radius: 4px;
+  max-width: 300px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  transform: translateX(100%);
+  pointer-events: none;
+}
+
+.security-tip-popup.show {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+.security-tip-popup .tip-icon {
+  color: var(--color-primary);
+  font-size: 1.2rem;
+  margin-right: 10px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.security-tip-popup .tip-content {
+  color: var(--color-text);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  display: inline-block;
+  vertical-align: middle;
+  width: calc(100% - 30px);
+}
+
+.security-tip-popup::before {
+  content: "🛡️";
+  position: absolute;
+  left: -30px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  opacity: 0.8;
 }

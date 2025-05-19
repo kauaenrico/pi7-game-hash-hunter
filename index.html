@@ -1,54 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Maze Network Defender</title>
+  <title>Hash Hunter</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="game-container">
-    <h1>Maze Network Defender</h1>
+    <h1 id="gameTitle">Hash Hunter</h1>
     <div class="canvas-container">
       <canvas id="gameCanvas" width="600" height="600"></canvas>
       <div id="gameOverlay">
         <div id="startScreen" class="overlay-screen">
-          <h2>Maze Network Defender</h2>
-          <p>Protect the network from Virus0x</p>
-          <p class="instructions">
-            Collect all security patches before the virus reaches you or the network core.
-            <br>Use WASD or Arrow keys to move.
-          </p>
-          <button id="startButton">START MISSION</button>
+          <h2>Hash Hunter</h2>
+          <div id="storyText" class="story-text"></div>
+          <div id="instructionsText" class="instructions"></div>
+          <button id="startButton">INICIAR MISSÃO</button>
         </div>
         <div id="gameOverScreen" class="overlay-screen hidden">
-          <h2>SYSTEM COMPROMISED</h2>
-          <p>Virus0x has infiltrated the network</p>
-          <p>Patches collected: <span id="finalScore">0/0</span></p>
-          <button id="retryButton">RETRY MISSION</button>
+          <h2 id="gameOverTitle">GAME OVER</h2>
+          <p id="gameOverMessage"></p>
+          <p>Hashes coletados: <span id="finalScore">0/0</span></p>
+          <button id="retryButton">TENTAR NOVAMENTE</button>
         </div>
         <div id="levelCompleteScreen" class="overlay-screen hidden">
-          <h2>NODE SECURED</h2>
-          <p>All patches successfully applied</p>
-          <button id="nextLevelButton">PROCEED TO NEXT NODE</button>
+          <h2 id="levelCompleteTitle">FASE COMPLETA!</h2>
+          <p id="levelCompleteMessage"></p>
+          <p id="securityTip" class="security-tip"></p>
+          <button id="nextLevelButton">PRÓXIMA FASE</button>
         </div>
       </div>
     </div>
     <div class="game-status">
       <div class="status-item">
-        <span>Level:</span>
+        <span id="levelLabel">Nível:</span>
         <span id="levelDisplay">1</span>
       </div>
       <div class="status-item">
-        <span>Patches:</span>
+        <span id="hashesLabel">Hashes:</span>
         <span id="patchCounter">0/0</span>
       </div>
       <div class="status-item">
-        <span>Status:</span>
-        <span id="statusDisplay">Ready</span>
+        <span id="statusLabel">Status:</span>
+        <span id="statusDisplay">Pronto</span>
+      </div>
+      <div class="status-item">
+        <span id="timeLabel">Tempo:</span>
+        <span id="timeDisplay">00:00</span>
       </div>
     </div>
   </div>
+  
+  <!-- Pop-up de dicas de segurança -->
+  <div id="securityTipPopup" class="security-tip-popup">
+    <span class="tip-content"></span>
+  </div>
+  
   <script type="module" src="js/main.js"></script>
 </body>
 </html>
