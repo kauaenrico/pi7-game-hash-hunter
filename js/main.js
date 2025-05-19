@@ -313,8 +313,46 @@ function nextLevel() {
   gameOverlay.classList.add('hidden');
   levelCompleteScreen.classList.add('hidden');
   
-  // Initialize new level
-  initGame();
+  // Reset game state
+  gameState.isGameRunning = true;
+  gameState.isGameOver = false;
+  gameState.isLevelComplete = false;
+  gameState.patchesCollected = 0;
+  gameState.statusMessage = 'Ativo';
+  gameState.startTime = Date.now();
+  gameState.currentTime = 0;
+  gameState.lastVirusDistance = 0;
+  gameState.lastVirusWarning = 0;
+  
+  // Calculate new cell size based on updated maze dimensions
+  gameState.cellSize = Math.floor(Math.min(
+    canvas.width / gameState.mazeSize.cols,
+    canvas.height / gameState.mazeSize.rows
+  ));
+
+  // Generate new maze with updated size
+  gameState.maze = generateMaze(gameState.mazeSize.rows, gameState.mazeSize.cols);
+  
+  // Place new patches in the new maze
+  const patchesInfo = placePatchesInMaze(gameState.maze);
+  gameState.patches = patchesInfo.patches;
+  gameState.totalPatches = patchesInfo.totalPatches;
+  
+  // Create new player and virus instances with updated cell size
+  gameState.player = new Player(1, 1, gameState.cellSize);
+  gameState.virus = new Virus(
+    gameState.mazeSize.rows - 2,
+    gameState.mazeSize.cols - 2,
+    gameState.cellSize
+  );
+  
+  // Update UI
+  updateUI();
+  
+  // Start game loop if not already running
+  if (!gameState.gameLoopId) {
+    gameLoop();
+  }
 }
 
 // Event Listeners
