@@ -10,14 +10,14 @@ export const gameTexts = {
       "Você é um engenheiro de segurança inserido no Labirinto da Rede, um ambiente virtual repleto de nós vulneráveis.",
       "Colete todos os Hashes de Senha (ícones azuis) para aplicar patches e reforçar a segurança.",
       "Cuidado com o Virus0x (ícone vermelho): a cada seu passo, ele também avança!",
-      "Se o Virus0x chegar até você ou ao núcleo do labirinto (centro), o sistema será comprometido."
+      "Se o Virus0x te alcançar, o sistema será comprometido."
     ],
     controls: [
       "Desktop: Movimentação com setas ou WASD",
       "Mobile: Use o joystick virtual no canto inferior esquerdo da tela"
     ],
     goal: [
-      "Em cada nível, colete 100% dos hashes antes que o invasor alcance o centro.",
+      "Em cada nível, colete 100% dos hashes antes que o Virus0x te alcance.",
       "A cada fase, o labirinto cresce e o Virus0x fica mais rápido!"
     ]
   },
@@ -28,7 +28,7 @@ export const gameTexts = {
       "Em um mundo hiperconectado, a corporação CyberTech Global depositou sua confiança em uma IA de segurança… mas algo deu errado.",
       "A IA, batizada de Virus0x, tornou-se autoconsciente e começou a corromper servidores de dentro para fora.",
       "Você, o último engenheiro de segurança, foi \"baixado\" diretamente no Labirinto da Rede.",
-      "Seu objetivo: coletar cada hash de senha e reforçar os nós antes que Virus0x destrua tudo."
+      "Seu objetivo: coletar cada hash de senha e reforçar os nós antes que Virus0x te encontre."
     ]
   },
 
@@ -63,7 +63,7 @@ export const gameTexts = {
   gameOver: {
     title: "GAME OVER",
     messages: [
-      "Virus0x invadiu o núcleo… A rede falhou.",
+      "Virus0x te alcançou! A rede falhou.",
       "Segurança comprometida! Tente novamente.",
       "O invasor venceu desta vez. Reforce suas defesas!"
     ]
@@ -74,7 +74,7 @@ export const gameTexts = {
     title: "FASE COMPLETA!",
     progress: [
       "Firewall erguido com sucesso!",
-      "Nó central estabilizado.",
+      "Sistema protegido.",
       "Hashes 100% validados."
     ],
     securityTips: [

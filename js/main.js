@@ -445,14 +445,6 @@ function checkGameConditions() {
     return;
   }
   
-  // Check if virus reached the center (network core)
-  const coreRow = Math.floor(gameState.mazeSize.rows / 2);
-  const coreCol = Math.floor(gameState.mazeSize.cols / 2);
-  if (virusRow === coreRow && virusCol === coreCol) {
-    gameOver('Virus reached network core');
-    return;
-  }
-  
   // Move virus every other frame for slower movement
   if (Math.random() < 0.5) {
     gameState.virus.move(gameState.maze, gameState.patches, playerRow, playerCol);
@@ -521,34 +513,6 @@ function drawDefaultObject(ctx, x, y, cellSize, type) {
       ctx.moveTo(centerX + hashSize/2, centerY - hashSize);
       ctx.lineTo(centerX + hashSize/2, centerY + hashSize);
       ctx.stroke();
-      break;
-
-    case 'core':
-      // Desenhar core (círculo amarelo com brilho)
-      // Brilho
-      ctx.shadowColor = '#ffff99';
-      ctx.shadowBlur = 20;
-      ctx.fillStyle = '#fff700';
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.shadowBlur = 0;
-      
-      // Borda
-      ctx.strokeStyle = '#ffd700';
-      ctx.lineWidth = 4;
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, radius + 2, 0, Math.PI * 2);
-      ctx.stroke();
-      
-      // Detalhes do core (ondas)
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 2;
-      for(let i = 0; i < 3; i++) {
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, radius - i*4, 0, Math.PI * 2);
-        ctx.stroke();
-      }
       break;
   }
 }
@@ -620,26 +584,6 @@ function drawGame() {
         );
       });
     }
-
-    // Desenhar endpoint (core)
-    const coreImg = getImage(gameAssets.images.core.path);
-    if (coreImg) {
-      ctx.drawImage(
-        coreImg,
-        gameState.mazeSize.cols / 2 * gameState.cellSize + (gameState.cellSize - gameAssets.images.core.width) / 2,
-        gameState.mazeSize.rows / 2 * gameState.cellSize + (gameState.cellSize - gameAssets.images.core.height) / 2,
-        gameAssets.images.core.width,
-        gameAssets.images.core.height
-      );
-    } else {
-      drawDefaultObject(
-        ctx,
-        gameState.mazeSize.cols / 2 * gameState.cellSize,
-        gameState.mazeSize.rows / 2 * gameState.cellSize,
-        gameState.cellSize,
-        'core'
-      );
-    }
   } else {
     // Fallback para todas as formas geométricas quando assets não estão carregados
     // Desenhar jogador
@@ -670,14 +614,5 @@ function drawGame() {
         'hash'
       );
     });
-
-    // Desenhar endpoint (core)
-    drawDefaultObject(
-      ctx,
-      gameState.mazeSize.cols / 2 * gameState.cellSize,
-      gameState.mazeSize.rows / 2 * gameState.cellSize,
-      gameState.cellSize,
-      'core'
-    );
   }
 }

@@ -16,11 +16,6 @@ export const gameAssets = {
       path: 'assets/images/hash.png',
       width: 24,
       height: 24
-    },
-    core: {
-      path: 'assets/images/core.png',
-      width: 32,
-      height: 32
     }
   }
 };

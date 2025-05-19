@@ -118,10 +118,6 @@ export class Virus {
       'left': [0, -1]
     };
     
-    // Find center of maze (alternative target)
-    const centerRow = Math.floor(maze.rows / 2);
-    const centerCol = Math.floor(maze.cols / 2);
-    
     // Choose target based on various factors
     let targetRow, targetCol;
     const randomFactor = Math.random();
@@ -135,12 +131,9 @@ export class Virus {
       // Choose random target within maze bounds
       targetRow = Math.floor(Math.random() * maze.rows);
       targetCol = Math.floor(Math.random() * maze.cols);
-    } else if (randomFactor < 0.7) { // Target player
+    } else { // Target player
       targetRow = playerRow;
       targetCol = playerCol;
-    } else { // Target center
-      targetRow = centerRow;
-      targetCol = centerCol;
     }
     
     // Calculate scores for each direction

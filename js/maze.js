@@ -147,41 +147,6 @@ export function drawMaze(ctx, maze, cellSize) {
       }
     }
   }
-
-  // Draw network core (center of maze)
-  const coreRow = Math.floor(rows / 2);
-  const coreCol = Math.floor(cols / 2);
-  const coreX = coreCol * cellSize;
-  const coreY = coreRow * cellSize;
-
-  // Draw core (yellow, with glow)
-  ctx.save();
-  ctx.shadowColor = '#ffff99';
-  ctx.shadowBlur = 20;
-  ctx.fillStyle = '#fff700';
-  ctx.beginPath();
-  ctx.arc(
-    coreX + cellSize / 2,
-    coreY + cellSize / 2,
-    cellSize / 3,
-    0,
-    Math.PI * 2
-  );
-  ctx.fill();
-  ctx.restore();
-
-  // Draw core border
-  ctx.strokeStyle = '#ffd700';
-  ctx.lineWidth = 4;
-  ctx.beginPath();
-  ctx.arc(
-    coreX + cellSize / 2,
-    coreY + cellSize / 2,
-    cellSize / 2,
-    0,
-    Math.PI * 2
-  );
-  ctx.stroke();
 }
 
 /**
