@@ -13,7 +13,8 @@ export const gameTexts = {
       "Se o Virus0x chegar até você ou ao núcleo do labirinto (centro), o sistema será comprometido."
     ],
     controls: [
-      "Movimentação: setas ou WASD"
+      "Desktop: Movimentação com setas ou WASD",
+      "Mobile: Use o joystick virtual no canto inferior esquerdo da tela"
     ],
     goal: [
       "Em cada nível, colete 100% dos hashes antes que o invasor alcance o centro.",

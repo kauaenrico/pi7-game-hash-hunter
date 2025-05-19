@@ -84,73 +84,61 @@ export function generateMaze(rows, cols) {
 export function drawMaze(ctx, maze, cellSize) {
   const { rows, cols, walls } = maze;
   
-  // Draw background
-  ctx.fillStyle = '#0a0a0a';
+  // Draw background (much lighter)
+  ctx.fillStyle = '#eaffea'; // very light green
   ctx.fillRect(0, 0, cols * cellSize, rows * cellSize);
   
-  // Draw grid lines
-  ctx.strokeStyle = '#333333';
-  ctx.lineWidth = 1;
-  
-  // Draw horizontal grid lines
+  // Draw grid lines (light gray, thicker)
+  ctx.strokeStyle = '#b0ffb0';
+  ctx.lineWidth = 2;
   for (let i = 0; i <= rows; i++) {
     ctx.beginPath();
     ctx.moveTo(0, i * cellSize);
     ctx.lineTo(cols * cellSize, i * cellSize);
     ctx.stroke();
   }
-  
-  // Draw vertical grid lines
   for (let j = 0; j <= cols; j++) {
     ctx.beginPath();
     ctx.moveTo(j * cellSize, 0);
     ctx.lineTo(j * cellSize, rows * cellSize);
     ctx.stroke();
   }
-  
-  // Draw paths
-  ctx.fillStyle = '#1a1a1a';
+
+  // Draw paths (white, for high contrast)
+  ctx.fillStyle = '#ffffff';
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
       const x = col * cellSize;
       const y = row * cellSize;
-      
-      // Draw path cell
-      ctx.fillRect(x + 1, y + 1, cellSize - 2, cellSize - 2);
+      ctx.fillRect(x + 2, y + 2, cellSize - 4, cellSize - 4);
     }
   }
-  
-  // Draw walls
-  ctx.strokeStyle = '#444444';
-  ctx.lineWidth = 3;
-  
+
+  // Draw walls (bright green, much thicker)
+  ctx.strokeStyle = '#00ff44';
+  ctx.lineWidth = 6;
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
       const x = col * cellSize;
       const y = row * cellSize;
-      
-      // Draw walls if they exist
       if (walls[row][col][0]) {  // North
         ctx.beginPath();
         ctx.moveTo(x, y);
         ctx.lineTo(x + cellSize, y);
         ctx.stroke();
       }
-      
       if (walls[row][col][1]) {  // East
         ctx.beginPath();
         ctx.moveTo(x + cellSize, y);
         ctx.lineTo(x + cellSize, y + cellSize);
         ctx.stroke();
       }
-      
       if (walls[row][col][2]) {  // South
         ctx.beginPath();
         ctx.moveTo(x, y + cellSize);
         ctx.lineTo(x + cellSize, y + cellSize);
         ctx.stroke();
       }
-      
       if (walls[row][col][3]) {  // West
         ctx.beginPath();
         ctx.moveTo(x, y);
@@ -159,15 +147,18 @@ export function drawMaze(ctx, maze, cellSize) {
       }
     }
   }
-  
+
   // Draw network core (center of maze)
   const coreRow = Math.floor(rows / 2);
   const coreCol = Math.floor(cols / 2);
   const coreX = coreCol * cellSize;
   const coreY = coreRow * cellSize;
-  
-  // Draw core
-  ctx.fillStyle = '#c19200';
+
+  // Draw core (yellow, with glow)
+  ctx.save();
+  ctx.shadowColor = '#ffff99';
+  ctx.shadowBlur = 20;
+  ctx.fillStyle = '#fff700';
   ctx.beginPath();
   ctx.arc(
     coreX + cellSize / 2,
@@ -177,10 +168,11 @@ export function drawMaze(ctx, maze, cellSize) {
     Math.PI * 2
   );
   ctx.fill();
-  
-  // Draw core glow
-  ctx.strokeStyle = 'rgba(255, 191, 0, 0.5)';
-  ctx.lineWidth = 2;
+  ctx.restore();
+
+  // Draw core border
+  ctx.strokeStyle = '#ffd700';
+  ctx.lineWidth = 4;
   ctx.beginPath();
   ctx.arc(
     coreX + cellSize / 2,

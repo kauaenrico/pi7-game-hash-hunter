@@ -5,6 +5,8 @@ import { placePatchesInMaze, drawPatches, isPatchAt } from './patch.js';
 import { initAudio, playSoundEffect, playBackgroundMusic, stopBackgroundMusic } from './audio.js';
 import { gameTexts, getRandomMessage, formatMessage } from './texts.js';
 import { getNewTip } from './security_tips.js';
+import { gameAssets, loadAllImages, getImage } from './assets.js';
+import { TouchControls } from './touch_controls.js';
 
 // Game state
 let gameState = {
@@ -24,7 +26,11 @@ let gameState = {
   startTime: 0,
   currentTime: 0,
   lastVirusDistance: 0,
-  lastVirusWarning: 0
+  lastVirusWarning: 0,
+  isPaused: false,
+  gameLoopId: null,
+  assetsLoaded: false,
+  touchControls: null,
 };
 
 // DOM Elements
@@ -51,6 +57,8 @@ const levelCompleteMessage = document.getElementById('levelCompleteMessage');
 const securityTip = document.getElementById('securityTip');
 const securityTipPopup = document.getElementById('securityTipPopup');
 const tipContent = securityTipPopup.querySelector('.tip-content');
+const pauseOverlay = document.getElementById('pauseOverlay');
+const continueButton = securityTipPopup.querySelector('.continue-button');
 
 // Variáveis para controle do pop-up
 let tipTimeout = null;
@@ -76,7 +84,7 @@ function initGameTexts() {
 }
 
 // Game initialization
-function initGame() {
+async function initGame() {
   // Calculate cell size based on canvas dimensions and maze size
   gameState.cellSize = Math.floor(Math.min(
     canvas.width / gameState.mazeSize.cols,
@@ -109,12 +117,16 @@ function initGame() {
   gameState.lastVirusDistance = 0;
   gameState.lastVirusWarning = 0;
   
+  // Reset pause state
+  gameState.isPaused = false;
+  pauseOverlay.classList.remove('show');
+  securityTipPopup.classList.remove('show');
+  
   // Limpa o pop-up de dicas
   if (tipTimeout) {
     clearTimeout(tipTimeout);
     tipTimeout = null;
   }
-  securityTipPopup.classList.remove('show');
   
   // Update UI
   updateUI();
@@ -124,6 +136,21 @@ function initGame() {
     gameState.isGameRunning = true;
     gameLoop();
   }
+
+  // Carregar imagens
+  try {
+    await loadAllImages();
+    gameState.assetsLoaded = true;
+  } catch (error) {
+    console.error('Error loading game assets:', error);
+    // Continuar com formas geométricas como fallback
+  }
+
+  // Initialize touch controls if on mobile
+  if (gameState.touchControls) {
+    gameState.touchControls.destroy();
+  }
+  gameState.touchControls = new TouchControls(canvas, handleTouchMove);
 }
 
 // UI updates
@@ -161,12 +188,30 @@ function calculateVirusDistance() {
   return Math.floor(Math.sqrt(dx * dx + dy * dy));
 }
 
+// Função para pausar o jogo
+function pauseGame() {
+  gameState.isPaused = true;
+  gameState.isGameRunning = false;
+  pauseOverlay.classList.add('show');
+  if (gameState.gameLoopId) {
+    cancelAnimationFrame(gameState.gameLoopId);
+    gameState.gameLoopId = null;
+  }
+}
+
+// Função para continuar o jogo
+function continueGame() {
+  gameState.isPaused = false;
+  gameState.isGameRunning = true;
+  pauseOverlay.classList.remove('show');
+  securityTipPopup.classList.remove('show');
+  gameLoop();
+}
+
 // Função para mostrar uma dica de segurança
 function showSecurityTip() {
-  // Limpa qualquer timeout existente
-  if (tipTimeout) {
-    clearTimeout(tipTimeout);
-  }
+  // Pausa o jogo
+  pauseGame();
   
   // Obtém uma nova dica
   const tip = getNewTip();
@@ -176,11 +221,6 @@ function showSecurityTip() {
   
   // Mostra o pop-up
   securityTipPopup.classList.add('show');
-  
-  // Define o timeout para esconder o pop-up
-  tipTimeout = setTimeout(() => {
-    securityTipPopup.classList.remove('show');
-  }, TIP_DISPLAY_TIME);
 }
 
 // Check if player collected a patch
@@ -299,6 +339,8 @@ nextLevelButton.addEventListener('click', () => {
   nextLevel();
 });
 
+continueButton.addEventListener('click', continueGame);
+
 // Initialize game texts when the page loads
 document.addEventListener('DOMContentLoaded', initGameTexts);
 
@@ -337,6 +379,13 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
+// Handle touch movement
+function handleTouchMove(direction) {
+  if (!gameState.isGameRunning || !direction) return;
+  
+  gameState.player.move(direction, gameState.maze);
+}
+
 // Handle resize
 window.addEventListener('resize', () => {
   if (gameState.maze) {
@@ -346,6 +395,12 @@ window.addEventListener('resize', () => {
     ));
     gameState.player.updateCellSize(gameState.cellSize);
     gameState.virus.updateCellSize(gameState.cellSize);
+    
+    // Update touch controls if they exist
+    if (gameState.touchControls) {
+      gameState.touchControls.destroy();
+      gameState.touchControls = new TouchControls(canvas, handleTouchMove);
+    }
   }
 });
 
@@ -363,8 +418,7 @@ function gameLoop() {
   drawPatches(ctx, gameState.patches, gameState.cellSize);
   
   // Draw player and virus
-  gameState.player.draw(ctx);
-  gameState.virus.draw(ctx);
+  drawGame();
   
   // Check for patch collection
   checkPatchCollection();
@@ -373,8 +427,8 @@ function gameLoop() {
   checkGameConditions();
   
   // Continue game loop
-  if (!gameState.isGameOver && !gameState.isLevelComplete) {
-    requestAnimationFrame(gameLoop);
+  if (!gameState.isGameOver && !gameState.isLevelComplete && !gameState.isPaused) {
+    gameState.gameLoopId = requestAnimationFrame(gameLoop);
   }
 }
 
@@ -402,5 +456,109 @@ function checkGameConditions() {
   // Move virus every other frame for slower movement
   if (Math.random() < 0.5) {
     gameState.virus.move(gameState.maze, gameState.patches, playerRow, playerCol);
+  }
+}
+
+// Modificar a função drawGame
+function drawGame() {
+  // Desenhar elementos do jogo
+  if (gameState.assetsLoaded) {
+    // Desenhar jogador
+    const playerImg = getImage(gameAssets.images.player.path);
+    if (playerImg) {
+      ctx.drawImage(
+        playerImg,
+        gameState.player.col * gameState.cellSize + (gameState.cellSize - gameAssets.images.player.width) / 2,
+        gameState.player.row * gameState.cellSize + (gameState.cellSize - gameAssets.images.player.height) / 2,
+        gameAssets.images.player.width,
+        gameAssets.images.player.height
+      );
+    }
+
+    // Desenhar vírus
+    const virusImg = getImage(gameAssets.images.virus.path);
+    if (virusImg) {
+      ctx.drawImage(
+        virusImg,
+        gameState.virus.col * gameState.cellSize + (gameState.cellSize - gameAssets.images.virus.width) / 2,
+        gameState.virus.row * gameState.cellSize + (gameState.cellSize - gameAssets.images.virus.height) / 2,
+        gameAssets.images.virus.width,
+        gameAssets.images.virus.height
+      );
+    }
+
+    // Desenhar hashes
+    const hashImg = getImage(gameAssets.images.hash.path);
+    if (hashImg) {
+      gameState.patches.forEach(patch => {
+        ctx.drawImage(
+          hashImg,
+          patch.col * gameState.cellSize + (gameState.cellSize - gameAssets.images.hash.width) / 2,
+          patch.row * gameState.cellSize + (gameState.cellSize - gameAssets.images.hash.height) / 2,
+          gameAssets.images.hash.width,
+          gameAssets.images.hash.height
+        );
+      });
+    }
+
+    // Desenhar endpoint
+    const coreImg = getImage(gameAssets.images.core.path);
+    if (coreImg) {
+      ctx.drawImage(
+        coreImg,
+        gameState.mazeSize.cols / 2 * gameState.cellSize + (gameState.cellSize - gameAssets.images.core.width) / 2,
+        gameState.mazeSize.rows / 2 * gameState.cellSize + (gameState.cellSize - gameAssets.images.core.height) / 2,
+        gameAssets.images.core.width,
+        gameAssets.images.core.height
+      );
+    }
+  } else {
+    // Fallback para formas geométricas
+    // Desenhar jogador
+    ctx.fillStyle = 'var(--color-player)';
+    ctx.beginPath();
+    ctx.arc(
+      gameState.player.col * gameState.cellSize + gameState.cellSize / 2,
+      gameState.player.row * gameState.cellSize + gameState.cellSize / 2,
+      gameState.cellSize / 3,
+      0,
+      Math.PI * 2
+    );
+    ctx.fill();
+
+    // Desenhar vírus
+    ctx.fillStyle = 'var(--color-virus)';
+    ctx.beginPath();
+    ctx.arc(
+      gameState.virus.col * gameState.cellSize + gameState.cellSize / 2,
+      gameState.virus.row * gameState.cellSize + gameState.cellSize / 2,
+      gameState.cellSize / 3,
+      0,
+      Math.PI * 2
+    );
+    ctx.fill();
+
+    // Desenhar hashes
+    ctx.fillStyle = 'var(--color-hash)';
+    gameState.patches.forEach(patch => {
+      ctx.fillRect(
+        patch.col * gameState.cellSize + gameState.cellSize / 4,
+        patch.row * gameState.cellSize + gameState.cellSize / 4,
+        gameState.cellSize / 2,
+        gameState.cellSize / 2
+      );
+    });
+
+    // Desenhar endpoint
+    ctx.fillStyle = 'var(--color-endpoint)';
+    ctx.beginPath();
+    ctx.arc(
+      gameState.mazeSize.cols / 2 * gameState.cellSize + gameState.cellSize / 2,
+      gameState.mazeSize.rows / 2 * gameState.cellSize + gameState.cellSize / 2,
+      gameState.cellSize / 3,
+      0,
+      Math.PI * 2
+    );
+    ctx.fill();
   }
 }
