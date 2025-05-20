@@ -84,69 +84,112 @@ export function generateMaze(rows, cols) {
 export function drawMaze(ctx, maze, cellSize) {
   const { rows, cols, walls } = maze;
   
-  // Draw background (much lighter)
-  ctx.fillStyle = '#eaffea'; // very light green
+  // Draw background with gradient
+  const gradient = ctx.createLinearGradient(0, 0, 0, rows * cellSize);
+  gradient.addColorStop(0, 'rgba(26, 136, 255, 0.1)');   // Light blue at top
+  gradient.addColorStop(1, 'rgba(0, 162, 255, 0.05)');   // Lighter blue at bottom
+  ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, cols * cellSize, rows * cellSize);
   
-  // Draw grid lines (light gray, thicker)
-  ctx.strokeStyle = '#b0ffb0';
-  ctx.lineWidth = 2;
-  for (let i = 0; i <= rows; i++) {
-    ctx.beginPath();
-    ctx.moveTo(0, i * cellSize);
-    ctx.lineTo(cols * cellSize, i * cellSize);
-    ctx.stroke();
-  }
-  for (let j = 0; j <= cols; j++) {
-    ctx.beginPath();
-    ctx.moveTo(j * cellSize, 0);
-    ctx.lineTo(j * cellSize, rows * cellSize);
-    ctx.stroke();
-  }
-
-  // Draw paths (white, for high contrast)
-  ctx.fillStyle = '#ffffff';
+  // Draw cell paths with subtle pattern
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
       const x = col * cellSize;
       const y = row * cellSize;
-      ctx.fillRect(x + 2, y + 2, cellSize - 4, cellSize - 4);
+      
+      // Draw cell background with subtle pattern
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';  // Very subtle white
+      ctx.fillRect(x + 1, y + 1, cellSize - 2, cellSize - 2);
+      
+      // Add subtle grid pattern
+      ctx.strokeStyle = 'rgba(26, 136, 255, 0.1)';  // Light blue grid
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x + cellSize, y);
+      ctx.lineTo(x + cellSize, y + cellSize);
+      ctx.lineTo(x, y + cellSize);
+      ctx.closePath();
+      ctx.stroke();
     }
   }
 
-  // Draw walls (bright green, much thicker)
-  ctx.strokeStyle = '#00ff44';
-  ctx.lineWidth = 6;
+  // Draw walls with modern style
+  ctx.lineWidth = cellSize * 0.15;  // Thicker walls
+  ctx.lineCap = 'round';  // Rounded wall ends
+  ctx.lineJoin = 'round'; // Rounded wall corners
+  
+  // Wall shadow
+  ctx.shadowColor = 'rgba(26, 136, 255, 0.3)';
+  ctx.shadowBlur = 8;
+  ctx.shadowOffsetX = 0;
+  ctx.shadowOffsetY = 0;
+  
+  // Draw walls with gradient
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
       const x = col * cellSize;
       const y = row * cellSize;
-      if (walls[row][col][0]) {  // North
+      
+      // Create wall gradient
+      const wallGradient = ctx.createLinearGradient(x, y, x + cellSize, y + cellSize);
+      wallGradient.addColorStop(0, 'rgba(26, 136, 255, 0.8)');    // Blue
+      wallGradient.addColorStop(0.5, 'rgba(0, 162, 255, 0.9)');   // Lighter blue
+      wallGradient.addColorStop(1, 'rgba(26, 136, 255, 0.8)');    // Blue
+      
+      ctx.strokeStyle = wallGradient;
+      
+      // Draw each wall with rounded corners
+      if (walls[row][col][0]) {  // North wall
         ctx.beginPath();
-        ctx.moveTo(x, y);
-        ctx.lineTo(x + cellSize, y);
+        ctx.moveTo(x + cellSize * 0.1, y);
+        ctx.lineTo(x + cellSize * 0.9, y);
         ctx.stroke();
       }
-      if (walls[row][col][1]) {  // East
+      if (walls[row][col][1]) {  // East wall
         ctx.beginPath();
-        ctx.moveTo(x + cellSize, y);
-        ctx.lineTo(x + cellSize, y + cellSize);
+        ctx.moveTo(x + cellSize, y + cellSize * 0.1);
+        ctx.lineTo(x + cellSize, y + cellSize * 0.9);
         ctx.stroke();
       }
-      if (walls[row][col][2]) {  // South
+      if (walls[row][col][2]) {  // South wall
         ctx.beginPath();
-        ctx.moveTo(x, y + cellSize);
-        ctx.lineTo(x + cellSize, y + cellSize);
+        ctx.moveTo(x + cellSize * 0.1, y + cellSize);
+        ctx.lineTo(x + cellSize * 0.9, y + cellSize);
         ctx.stroke();
       }
-      if (walls[row][col][3]) {  // West
+      if (walls[row][col][3]) {  // West wall
         ctx.beginPath();
-        ctx.moveTo(x, y);
-        ctx.lineTo(x, y + cellSize);
+        ctx.moveTo(x, y + cellSize * 0.1);
+        ctx.lineTo(x, y + cellSize * 0.9);
         ctx.stroke();
       }
     }
   }
+  
+  // Reset shadow
+  ctx.shadowColor = 'transparent';
+  ctx.shadowBlur = 0;
+  ctx.shadowOffsetX = 0;
+  ctx.shadowOffsetY = 0;
+  
+  // Add subtle glow effect to walls
+  ctx.globalCompositeOperation = 'soft-light';
+  ctx.fillStyle = 'rgba(26, 136, 255, 0.2)';  // Very subtle blue glow
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      if (walls[row][col][0] || walls[row][col][1] || walls[row][col][2] || walls[row][col][3]) {
+        const x = col * cellSize;
+        const y = row * cellSize;
+        ctx.beginPath();
+        ctx.arc(x + cellSize/2, y + cellSize/2, cellSize * 0.4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  }
+  
+  // Reset composite operation
+  ctx.globalCompositeOperation = 'source-over';
 }
 
 /**
