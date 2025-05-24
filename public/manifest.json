@@ -8,9 +8,20 @@
   "description": "Jogo Hash Hunter",
   "icons": [
     {
-      "src": "/assets/images/placeholder.svg",
+      "src": "/assets/images/logo.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/images/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/images/logo.png",
       "sizes": "192x192",
-      "type": "image/svg+xml"
+      "type": "image/png"
     }
   ]
 }
