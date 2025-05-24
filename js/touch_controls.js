@@ -30,8 +30,8 @@ export class TouchControls {
     // Style joystick base
     this.joystickBase.style.cssText = `
       position: fixed;
-      bottom: 30px;
-      left: 30px;
+      top: 62vh;
+      left: 50%;
       width: 100px;
       height: 100px;
       background: rgba(255, 255, 255, 0.2);
@@ -40,6 +40,7 @@ export class TouchControls {
       display: none;
       z-index: 1000;
       touch-action: none;
+      transform: translate(-50%, 0); // Centraliza horizontalmente
     `;
 
     // Style joystick handle
@@ -150,4 +151,4 @@ export class TouchControls {
       this.joystickBase.remove();
     }
   }
-} 
+}
