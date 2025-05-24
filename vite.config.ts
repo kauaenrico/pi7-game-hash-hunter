@@ -9,13 +9,13 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'PI7 Game',
-        short_name: 'PI7Game',
+        name: 'Hash Hunter',
+        short_name: 'Hash Hunter',
         start_url: '.',
         display: 'standalone',
         background_color: '#ffffff',
         theme_color: '#0f172a',
-        description: 'Jogo PI7 como Progressive Web App.',
+        description: 'Jogo Hash Hunter',
         icons: [
           {
             src: '/assets/images/placeholder.svg',
