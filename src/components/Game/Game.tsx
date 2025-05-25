@@ -209,7 +209,16 @@ export const Game: React.FC = () => {
           <div className="credits-popup">
             <div className="credits-content">
               <h2>Créditos</h2>
-              <p>Jogo desenvolvido para fins educacionais.<br />Inspirado em temas de segurança da informação.<br />Desenvolvedor: Seu Nome Aqui</p>
+              <p>
+                Jogo desenvolvido como parte do Projeto Integrador do curso de<br />
+                Engenharia de Computação<br />UNISAL Americana.<br /><br />
+                <b>Desenvolvedores:</b><br />
+                Henrique Pignato<br />
+                Kauã Altran<br />
+                Leonardo Fanhani<br />
+                Lucas Correa<br />
+                Luke Belatine
+              </p>
               <button className="continue-button" onClick={() => setShowCredits(false)}>VOLTAR</button>
             </div>
           </div>

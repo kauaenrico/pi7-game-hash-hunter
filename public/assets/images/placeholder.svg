@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <!-- Template para player.png -->
+    <rect x="0" y="0" width="32" height="32" fill="none" stroke="#0000ff" stroke-width="2" stroke-dasharray="4,4"/>
+    <text x="16" y="20" font-family="Arial" font-size="12" fill="#0000ff" text-anchor="middle">PLAYER</text>
+</svg>
+
+<!-- Template para virus.png -->
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0" y="0" width="32" height="32" fill="none" stroke="#ff0000" stroke-width="2" stroke-dasharray="4,4"/>
+    <text x="16" y="20" font-family="Arial" font-size="12" fill="#ff0000" text-anchor="middle">VIRUS</text>
+</svg>
+
+<!-- Template para hash.png -->
+<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0" y="0" width="24" height="24" fill="none" stroke="#ffff00" stroke-width="2" stroke-dasharray="4,4"/>
+    <text x="12" y="16" font-family="Arial" font-size="10" fill="#ffff00" text-anchor="middle">HASH</text>
+</svg>
+
+<!-- Template para core.png -->
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0" y="0" width="32" height="32" fill="none" stroke="#00ff00" stroke-width="2" stroke-dasharray="4,4"/>
+    <text x="16" y="20" font-family="Arial" font-size="12" fill="#00ff00" text-anchor="middle">CORE</text>
+</svg> 
