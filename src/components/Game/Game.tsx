@@ -76,18 +76,6 @@ function getRandom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-// Componente de setas virtuais para mobile
-const VirtualArrows: React.FC<{ onMove: (dir: string) => void }> = ({ onMove }) => (
-  <div className="virtual-arrows">
-    <button className="arrow up" onTouchStart={() => onMove('arrowup')} onMouseDown={() => onMove('arrowup')}>▲</button>
-    <div>
-      <button className="arrow left" onTouchStart={() => onMove('arrowleft')} onMouseDown={() => onMove('arrowleft')}>◀</button>
-      <button className="arrow down" onTouchStart={() => onMove('arrowdown')} onMouseDown={() => onMove('arrowdown')}>▼</button>
-      <button className="arrow right" onTouchStart={() => onMove('arrowright')} onMouseDown={() => onMove('arrowright')}>▶</button>
-    </div>
-  </div>
-);
-
 export const Game: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [gameState, setGameState] = useState({
@@ -108,18 +96,20 @@ export const Game: React.FC = () => {
   const [canvasSize, setCanvasSize] = useState(600);
   const [showTipPopup, setShowTipPopup] = useState(false);
   const [tipPopupText, setTipPopupText] = useState('');
+  const [gameReady, setGameReady] = useState(false);
+  const [showCredits, setShowCredits] = useState(false);
 
   useEffect(() => {
     // Responsividade do canvas
     function handleResize() {
-      const min = Math.min(window.innerWidth, window.innerHeight) - 32;
+      const min = Math.min(window.innerWidth, window.innerHeight) - (isMobile ? 32 : 64);
       setCanvasSize(Math.max(240, Math.min(600, min)));
       setIsMobile(window.innerWidth < 700);
     }
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [isMobile]);
 
   useEffect(() => {
     // Bloquear scroll e zoom no mobile
@@ -136,7 +126,7 @@ export const Game: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (!canvasRef.current) return;
+    if (!gameReady || !canvasRef.current) return;
     gameEngine = new GameEngine(canvasRef.current, {
       onGameStateChange: setGameState,
       onGameOver: (message) => {
@@ -160,70 +150,81 @@ export const Game: React.FC = () => {
     return () => {
       gameEngine?.cleanup();
     };
-  }, []);
+  }, [gameReady, canvasSize]);
 
   const handleStartGame = () => {
     setShowStartScreen(false);
     setShowGameOver(false);
     setShowLevelComplete(false);
-    // Reiniciar o jogo
-    gameEngine?.cleanup();
-    if (canvasRef.current) {
-      gameEngine = new GameEngine(canvasRef.current, {
-        onGameStateChange: setGameState,
-        onGameOver: (message) => {
-          setGameOverMessage(getRandom(gameOverMessages));
-          setShowGameOver(true);
-        },
-        onLevelComplete: (message, tip) => {
-          setLevelCompleteMessage(getRandom(levelCompleteMessages));
-          setSecurityTip(getRandom(levelCompleteTips));
-          setShowLevelComplete(true);
-        },
-        onSecurityTip: (tip) => {
-          setSecurityTip(tip);
-          setShowSecurityTip(true);
-        },
-        onHashCollected: showHashTip
-      });
-      gameEngine.setOnNextLevel(() => {
-        setShowLevelComplete(true);
-      });
-    }
+    setGameReady(true);
   };
 
   const handleRetry = () => {
     setShowGameOver(false);
     setShowLevelComplete(false);
-    // Reiniciar o jogo
-    handleStartGame();
+    setGameReady(false);
+    setTimeout(() => setGameReady(true), 50);
   };
 
   const handleNextLevel = () => {
     setShowLevelComplete(false);
-    // Avançar para o próximo nível
     gameEngine?.nextLevel();
   };
 
-  // Função para mostrar dica ao coletar hash
   function showHashTip() {
     setTipPopupText(getRandomTip());
     setShowTipPopup(true);
     gameEngine?.pause();
   }
-
   function handleContinueTip() {
     setShowTipPopup(false);
-    setTimeout(() => gameEngine?.resume(), 100); // retoma o jogo
+    setTimeout(() => gameEngine?.resume(), 100);
+  }
+
+  // Setas virtuais estilo anterior
+  const VirtualArrows: React.FC<{ onMove: (dir: string) => void }> = ({ onMove }) => (
+    <div className="virtual-arrows-row">
+      <div className="virtual-arrows-old">
+        <button className="arrow-old up" onPointerDown={() => onMove('arrowup')}>▲</button>
+        <div>
+          <button className="arrow-old left" onPointerDown={() => onMove('arrowleft')}>◀</button>
+          <button className="arrow-old down" onPointerDown={() => onMove('arrowdown')}>▼</button>
+          <button className="arrow-old right" onPointerDown={() => onMove('arrowright')}>▶</button>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Página inicial customizada
+  if (showStartScreen) {
+    return (
+      <div className="game-container font-tech">
+        <div className="start-menu">
+          <h1 className="start-title">Hash Hunter</h1>
+          <p className="start-desc">Proteja a rede, colete os hashes e fuja do vírus!</p>
+          <button className="start-btn" onClick={handleStartGame}>INICIAR MISSÃO</button>
+          <button className="credits-btn" onClick={() => setShowCredits(true)}>CRÉDITOS</button>
+        </div>
+        {showCredits && (
+          <div className="credits-popup">
+            <div className="credits-content">
+              <h2>Créditos</h2>
+              <p>Jogo desenvolvido para fins educacionais.<br />Inspirado em temas de segurança da informação.<br />Desenvolvedor: Seu Nome Aqui</p>
+              <button className="continue-button" onClick={() => setShowCredits(false)}>VOLTAR</button>
+            </div>
+          </div>
+        )}
+      </div>
+    );
   }
 
   return (
     <div className="game-container font-tech">
       <h1 id="gameTitle">Hash Hunter</h1>
-      <div className="canvas-container center-mobile">
-        <canvas ref={canvasRef} width={canvasSize} height={canvasSize} style={{ width: canvasSize, height: canvasSize }} />
+      <div className={`canvas-container center-mobile${isMobile ? ' mobile-stack' : ''}`}>
+        <canvas ref={canvasRef} width={canvasSize} height={canvasSize} style={{ width: canvasSize, height: canvasSize, display: gameReady ? 'block' : 'none' }} />
         <GameOverlay
-          showStartScreen={showStartScreen}
+          showStartScreen={false}
           showGameOver={showGameOver}
           showLevelComplete={showLevelComplete}
           gameOverMessage={gameOverMessage}
@@ -232,9 +233,6 @@ export const Game: React.FC = () => {
           onRetry={handleRetry}
           onNextLevel={handleNextLevel}
         />
-        {isMobile && (
-          <VirtualArrows onMove={dir => gameEngine?.movePlayerExternally(dir)} />
-        )}
         {showTipPopup && (
           <div className="security-tip-popup show">
             <span className="tip-icon">🛡️</span>
@@ -243,6 +241,9 @@ export const Game: React.FC = () => {
           </div>
         )}
       </div>
+      {isMobile && gameReady && (
+        <VirtualArrows onMove={dir => gameEngine?.movePlayerExternally(dir)} />
+      )}
       <GameStatus {...gameState} />
       <PauseOverlay />
       <SecurityTipPopup
