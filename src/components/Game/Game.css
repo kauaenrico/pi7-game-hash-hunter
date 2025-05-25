@@ -227,18 +227,25 @@ body {
 }
 
 .continue-button {
-  padding: 10px 24px;
-  background-color: #3b82f6;
-  color: white;
-  border: none;
-  border-radius: 8px;
+  font-family: inherit;
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 0.8rem 2rem;
+  margin: 0.5rem;
+  border: 2px solid #00ffff;
+  background-color: transparent;
+  color: #fff;
+  border-radius: 12px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px #00ffff33;
+}
+.continue-button:hover, .credits-btn:hover {
+  background-color: #00ffff11;
+  box-shadow: 0 0 20px #00ffffcc;
+  transform: scale(1.05);
 }
 
-.continue-button:hover {
-  background-color: #2563eb;
-}
 
 .hidden {
   display: none;
