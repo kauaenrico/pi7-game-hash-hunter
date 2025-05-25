@@ -146,6 +146,13 @@ export class TouchControls {
     this.onMove(direction);
   }
 
+  // Método para controlar a visibilidade do joystick
+  setVisible(visible) {
+    if (this.joystickBase) {
+      this.joystickBase.style.display = visible ? 'block' : 'none';
+    }
+  }
+
   destroy() {
     if (this.joystickBase) {
       this.joystickBase.remove();

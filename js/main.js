@@ -197,6 +197,10 @@ function pauseGame() {
     cancelAnimationFrame(gameState.gameLoopId);
     gameState.gameLoopId = null;
   }
+  // Esconde o joystick quando o jogo está pausado
+  if (gameState.touchControls) {
+    gameState.touchControls.setVisible(false);
+  }
 }
 
 // Função para continuar o jogo
@@ -205,6 +209,10 @@ function continueGame() {
   gameState.isGameRunning = true;
   pauseOverlay.classList.remove('show');
   securityTipPopup.classList.remove('show');
+  // Mostra o joystick quando o jogo continua
+  if (gameState.touchControls) {
+    gameState.touchControls.setVisible(true);
+  }
   gameLoop();
 }
 
@@ -221,6 +229,11 @@ function showSecurityTip() {
   
   // Mostra o pop-up
   securityTipPopup.classList.add('show');
+  
+  // Esconde o joystick quando mostra a dica
+  if (gameState.touchControls) {
+    gameState.touchControls.setVisible(false);
+  }
 }
 
 // Check if player collected a patch
@@ -271,6 +284,11 @@ function gameOver(reason) {
   // Mostra o popup de game over
   securityTipPopup.classList.add('show');
   tipContent.textContent = `${gameTexts.gameOver.title}\n\n${getRandomMessage(gameTexts.gameOver.messages)}\n\nPontuação: ${gameState.patchesCollected}/${gameState.totalPatches}`;
+  
+  // Esconde o joystick no game over
+  if (gameState.touchControls) {
+    gameState.touchControls.setVisible(false);
+  }
   
   // Play game over sound
   playSoundEffect('gameOver');
