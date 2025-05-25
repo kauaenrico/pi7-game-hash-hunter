@@ -175,7 +175,7 @@ export class GameEngine {
   private mazeCols = 6;
   private virusHistory: string[] = [];
   private lastMoveTime = 0;
-  private moveInterval = 500; // ms (velocidade do vírus)
+  private moveInterval = 700; // ms (velocidade do vírus)
   private keyQueue: string[] = [];
   private onNextLevel: (() => void) | null = null;
   private paused = false;
