@@ -282,8 +282,8 @@ export class GameEngine {
       { dr: 0, dc: 1, wall: 1, name: 'right' }
     ];
     // Filtra movimentos possíveis
-    // Agora evita repetir os últimos 3 movimentos
-    let filtered = directions.filter(d => !this.virusHistory.slice(0, 3).includes(d.name) && !this.maze!.walls[row][col][d.wall]);
+    // Agora evita repetir os últimos 5 movimentos
+    let filtered = directions.filter(d => !this.virusHistory.slice(0, 5).includes(d.name) && !this.maze!.walls[row][col][d.wall]);
     if (filtered.length === 0) filtered = directions.filter(d => !this.maze!.walls[row][col][d.wall]);
     // Prioriza aproximação do player
     const playerRow = this.playerPos.row;
@@ -302,7 +302,7 @@ export class GameEngine {
     }
     this.virusPos = { row: row + move.dr, col: col + move.dc };
     this.virusHistory.unshift(move.name);
-    if (this.virusHistory.length > 6) this.virusHistory.pop();
+    if (this.virusHistory.length > 10) this.virusHistory.pop();
   }
 
   private checkPlayerCaught() {
