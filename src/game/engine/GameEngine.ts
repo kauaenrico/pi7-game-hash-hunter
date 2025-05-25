@@ -179,6 +179,7 @@ export class GameEngine {
   private keyQueue: string[] = [];
   private onNextLevel: (() => void) | null = null;
   private paused = false;
+  private virusPosHistory: { row: number, col: number }[] = [];
 
   constructor(canvas: HTMLCanvasElement, options: GameEngineOptions) {
     this.canvas = canvas;
@@ -281,10 +282,20 @@ export class GameEngine {
       { dr: 0, dc: -1, wall: 3, name: 'left' },
       { dr: 0, dc: 1, wall: 1, name: 'right' }
     ];
-    // Filtra movimentos possíveis
-    // Agora evita repetir os últimos 5 movimentos
-    let filtered = directions.filter(d => !this.virusHistory.slice(0, 5).includes(d.name) && !this.maze!.walls[row][col][d.wall]);
-    if (filtered.length === 0) filtered = directions.filter(d => !this.maze!.walls[row][col][d.wall]);
+    // Histórico de posições
+    if (!this.virusPosHistory.length || this.virusPosHistory[0].row !== row || this.virusPosHistory[0].col !== col) {
+      this.virusPosHistory.unshift({ row, col });
+      if (this.virusPosHistory.length > 6) this.virusPosHistory.pop();
+    }
+    // Filtra movimentos possíveis que não voltam para as últimas 6 posições
+    let filtered = directions.filter(d => {
+      const next = { row: row + d.dr, col: col + d.dc };
+      return !this.maze!.walls[row][col][d.wall] && !this.virusPosHistory.some(h => h.row === next.row && h.col === next.col);
+    });
+    if (filtered.length === 0) {
+      // Se não houver opção, pode ir para qualquer célula possível
+      filtered = directions.filter(d => !this.maze!.walls[row][col][d.wall]);
+    }
     // Prioriza aproximação do player
     const playerRow = this.playerPos.row;
     const playerCol = this.playerPos.col;
@@ -301,8 +312,6 @@ export class GameEngine {
       move = filtered[Math.floor(Math.random() * filtered.length)];
     }
     this.virusPos = { row: row + move.dr, col: col + move.dc };
-    this.virusHistory.unshift(move.name);
-    if (this.virusHistory.length > 10) this.virusHistory.pop();
   }
 
   private checkPlayerCaught() {
