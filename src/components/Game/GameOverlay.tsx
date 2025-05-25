@@ -25,7 +25,7 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
     <div id="gameOverlay">
       {showStartScreen && (
         <div id="startScreen" className="overlay-screen">
-          <h2>Hash Hunter</h2>
+          <h2>Hash dasds</h2>
           <div id="storyText" className="story-text">
             Bem-vindo ao Hash Hunter! Sua missão é coletar todos os hashes enquanto evita o vírus.
           </div>
@@ -44,7 +44,7 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
         <div id="gameOverScreen" className="overlay-screen">
           <h2 id="gameOverTitle">GAME OVER</h2>
           <p id="gameOverMessage">{gameOverMessage}</p>
-          <button id="retryButton" onClick={onRetry}>
+          <button className="retry-btn" id="retryButton" onClick={onRetry}>
             TENTAR NOVAMENTE
           </button>
         </div>

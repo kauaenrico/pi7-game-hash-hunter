@@ -56,6 +56,7 @@ function getRandomTip() {
   return securityTips[Math.floor(Math.random() * securityTips.length)];
 }
 
+
 // Textos de feedback (copiado de js/texts.js)
 const gameOverMessages = [
   "Virus0x te alcançou! A rede falhou.",
@@ -72,7 +73,7 @@ const levelCompleteTips = [
   "DICA: Ative autenticação em dois fatores.",
   "DICA: Nunca reutilize a mesma senha em várias contas."
 ];
-function getRandom(arr) {
+function getRandom(arr: string | any[]) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
@@ -124,6 +125,30 @@ export const Game: React.FC = () => {
       document.removeEventListener('dblclick', e => e.preventDefault());
     };
   }, []);
+
+  useEffect(() => {
+  if (!gameReady) return;
+
+  // Criar partículas
+  const particles: HTMLDivElement[] = [];
+
+  for (let i = 0; i < 40; i++) {
+    const particle = document.createElement("div");
+    particle.className = "particle";
+    particle.style.top = Math.random() * 100 + "vh";
+    particle.style.left = Math.random() * 100 + "vw";
+    particle.style.animationDuration = 3 + Math.random() * 4 + "s";
+    particle.style.position = "absolute";
+    document.body.appendChild(particle);
+    particles.push(particle);
+  }
+
+  // Cleanup ao desmontar
+  return () => {
+    particles.forEach(p => p.remove());
+  };
+}, [gameReady]);
+
 
   useEffect(() => {
     if (!gameReady || !canvasRef.current) return;
@@ -200,8 +225,12 @@ export const Game: React.FC = () => {
     return (
       <div className="game-container font-tech">
         <div className="start-menu">
-          <h1 className="start-title">Hash Hunter</h1>
-          <p className="start-desc">Proteja a rede, colete os hashes e fuja do vírus!</p>
+          <img src='./public/assets/images/logo-teste.png' alt="Logo" className="start-logo" />
+          <h1 className="start-title">
+  <span className="hash-color">Hash </span>
+  <span className="hunter-color">Hunter</span>
+</h1>
+          <p className="start-desc">Colete hashes, evite o virus e proteja sua rede!!</p>
           <button className="start-btn" onClick={handleStartGame}>INICIAR MISSÃO</button>
           <button className="credits-btn" onClick={() => setShowCredits(true)}>CRÉDITOS</button>
         </div>
@@ -263,3 +292,4 @@ export const Game: React.FC = () => {
     </div>
   );
 }; 
+

@@ -72,8 +72,8 @@ function drawMaze(ctx: CanvasRenderingContext2D, maze: Maze, cellSize: number) {
   const { rows, cols, walls } = maze;
   // Fundo com gradiente
   const gradient = ctx.createLinearGradient(0, 0, 0, rows * cellSize);
-  gradient.addColorStop(0, 'rgba(26, 136, 255, 0.1)');
-  gradient.addColorStop(1, 'rgba(0, 162, 255, 0.05)');
+  gradient.addColorStop(0, 'rgba(2, 28, 56, 0.1)');
+  gradient.addColorStop(1, 'rgba(33, 0, 63, 0.05)');
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, cols * cellSize, rows * cellSize);
   // Padrão sutil nas células
@@ -107,8 +107,8 @@ function drawMaze(ctx: CanvasRenderingContext2D, maze: Maze, cellSize: number) {
       const x = col * cellSize;
       const y = row * cellSize;
       const wallGradient = ctx.createLinearGradient(x, y, x + cellSize, y + cellSize);
-      wallGradient.addColorStop(0, 'rgba(26, 136, 255, 0.8)');
-      wallGradient.addColorStop(0.5, 'rgba(0, 162, 255, 0.9)');
+      wallGradient.addColorStop(0, '#00f294');
+      wallGradient.addColorStop(0.5, '#501363');
       wallGradient.addColorStop(1, 'rgba(26, 136, 255, 0.8)');
       ctx.strokeStyle = wallGradient;
       if (walls[row][col][0]) {
@@ -142,7 +142,7 @@ function drawMaze(ctx: CanvasRenderingContext2D, maze: Maze, cellSize: number) {
   ctx.shadowOffsetX = 0;
   ctx.shadowOffsetY = 0;
   ctx.globalCompositeOperation = 'soft-light';
-  ctx.fillStyle = 'rgba(26, 136, 255, 0.2)';
+  ctx.fillStyle = 'rgba(0, 24, 49, 0.2)';
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
       if (walls[row][col][0] || walls[row][col][1] || walls[row][col][2] || walls[row][col][3]) {
@@ -180,14 +180,43 @@ export class GameEngine {
   private onNextLevel: (() => void) | null = null;
   private paused = false;
   private virusPosHistory: { row: number, col: number }[] = [];
+  private playerImg: HTMLImageElement | undefined;
+private virusImg:  HTMLImageElement | undefined;
+private hashImg:   HTMLImageElement | undefined;
+private spritesReady = false;
 
   constructor(canvas: HTMLCanvasElement, options: GameEngineOptions) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d')!;
     this.options = options;
+    this.loadSprites().then(() => {
+  this.spritesReady = true;
+  this.init();              // só inicia o jogo depois que as imagens carregarem
+});
     this.init();
   }
+  loadSprites() {
+    throw new Error("Method not implemented.");
+  }
 
+  private loadSprites(): Promise<void> {
+  const load = (src: string) =>
+    new Promise<HTMLImageElement>(resolve => {
+      const img = new Image();
+      img.src = src;
+      img.onload = () => resolve(img);
+    });
+
+  return Promise.all([
+    load('./public/assets/images/old/player.png'),
+    load('./public/assets/images/old/virus.png'),
+    load('./public/assets/images/old/hash.png')
+  ]).then(([p, v, h]) => {
+    this.playerImg = p;
+    this.virusImg  = v;
+    this.hashImg   = h;
+  });
+}
   private init() {
     // Inicializar o jogo
     this.mazeRows = 6 + (this.level - 1);
@@ -362,36 +391,32 @@ export class GameEngine {
       const cellSize = this.canvas.width / this.maze.cols;
       drawMaze(this.ctx, this.maze, cellSize);
       // Player
-      this.ctx.fillStyle = '#3b82f6';
-      this.ctx.beginPath();
-      this.ctx.arc(
-        this.playerPos.col * cellSize + cellSize / 2,
-        this.playerPos.row * cellSize + cellSize / 2,
-        cellSize * 0.35,
-        0,
-        2 * Math.PI
-      );
+this.ctx.drawImage(
+  this.playerImg,
+  this.playerPos.col * cellSize + cellSize * 0.1,
+  this.playerPos.row * cellSize + cellSize * 0.1,
+  cellSize * 0.8,
+  cellSize * 0.8
+);
       this.ctx.fill();
       // Hashes
-      this.ctx.fillStyle = '#f59e42';
-      for (const hash of this.hashPositions) {
-        this.ctx.fillRect(
-          hash.col * cellSize + cellSize * 0.2,
-          hash.row * cellSize + cellSize * 0.2,
-          cellSize * 0.6,
-          cellSize * 0.6
-        );
-      }
+for (const hash of this.hashPositions) {
+  this.ctx.drawImage(
+    this.hashImg,
+    hash.col * cellSize + cellSize * 0.2,
+    hash.row * cellSize + cellSize * 0.2,
+    cellSize * 0.6,
+    cellSize * 0.6
+  );
+}
       // Vírus
-      this.ctx.fillStyle = '#ef4444';
-      this.ctx.beginPath();
-      this.ctx.arc(
-        this.virusPos.col * cellSize + cellSize / 2,
-        this.virusPos.row * cellSize + cellSize / 2,
-        cellSize * 0.35,
-        0,
-        2 * Math.PI
-      );
+this.ctx.drawImage(
+  this.virusImg,
+  this.virusPos.col * cellSize + cellSize * 0.1,
+  this.virusPos.row * cellSize + cellSize * 0.1,
+  cellSize * 0.8,
+  cellSize * 0.8
+);
       this.ctx.fill();
     }
     // Aqui você pode desenhar outros elementos do jogo.

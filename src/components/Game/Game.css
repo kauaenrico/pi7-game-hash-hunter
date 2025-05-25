@@ -1,3 +1,41 @@
+body {
+  height: 100vh;
+  background: #00091a;
+  color: #ffffff;
+  font-family: 'JetBrains Mono', monospace;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.particle {
+  width: 6px;
+  height: 6px;
+  background-color: #00ffff88;
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: float 6s infinite ease-in-out;
+  z-index: 0;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px) scale(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(-40px) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-80px) scale(1);
+    opacity: 0.2;
+  }
+}
+
+
 .game-container {
   display: flex;
   flex-direction: column;
@@ -8,10 +46,11 @@
 }
 
 #gameTitle {
-  font-size: 2.5rem;
-  color: #0f172a;
-  margin-bottom: 20px;
-  text-align: center;
+    font-size: 3rem;
+  text-shadow: 0 0 20px #00ffff88;
+  margin-bottom: 1rem;
+  margin-bottom: 8px;
+  letter-spacing: 2px;
 }
 
 .font-tech {
@@ -60,16 +99,7 @@
   background-color: #f8fafc;
 }
 
-.game-status {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 600px;
-  padding: 10px;
-  background-color: #f8fafc;
-  border: 2px solid #0f172a;
-  border-radius: 8px;
-}
+
 
 .status-item {
   display: flex;
@@ -78,9 +108,32 @@
   gap: 5px;
 }
 
+.start-title {
+    font-size: 3rem;
+  text-shadow: 0 0 20px #00ffff88;
+  margin-bottom: 1rem;
+  margin-bottom: 8px;
+  letter-spacing: 2px;
+}
+
+.hash-color {
+  color: #00fcfd;
+}
+
+.hunter-color {
+  color: #00f294;
+}
+
+.start-logo {
+  width: 300px;
+  margin-top: -20px;
+  margin-bottom: -20px;
+}
+
 .status-item span:first-child {
   font-weight: bold;
-  color: #0f172a;
+  text-shadow: 0 0 20px #00ffff88;
+  color: #00B37E;
 }
 
 .overlay-screen {
@@ -303,36 +356,69 @@
   min-height: 60vh;
   gap: 18px;
 }
-.start-title {
-  font-size: 2.5rem;
-  color: #38bdf8;
-  margin-bottom: 8px;
-  letter-spacing: 2px;
-}
+
 .start-desc {
   font-size: 1.1rem;
-  color: #64748b;
+  color: #ccc;
   margin-bottom: 18px;
   text-align: center;
 }
 .start-btn, .credits-btn {
-  padding: 14px 32px;
-  font-size: 1.2rem;
-  background: #0f172a;
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  margin: 6px 0;
-  font-family: 'Share Tech Mono', monospace;
+  font-family: inherit;
   font-weight: bold;
-  letter-spacing: 1px;
+  font-size: 1rem;
+  padding: 0.8rem 2rem;
+  margin: 0.5rem;
+  border: 2px solid #00ffff;
+  background-color: transparent;
+  color: #fff;
+  border-radius: 12px;
   cursor: pointer;
-  box-shadow: 0 2px 8px #0ea5e933;
-  transition: background 0.15s, color 0.15s;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px #00ffff33;
 }
 .start-btn:hover, .credits-btn:hover {
-  background: #2563eb;
+  background-color: #00ffff11;
+  box-shadow: 0 0 20px #00ffffcc;
+  transform: scale(1.05);
+}
+
+.game-status {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 600px;
+  padding: 10px;
+  background-color: transparent;
+  border: 2px solid #00ffff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px #00ffff33;
+}
+
+.game-status:hover {
+  background-color: #00ffff11;
+  box-shadow: 0 0 10px #00ffffcc;
+  transform: scale(1);
+}
+
+.retry-btn, .credits-btn {
+  font-family: inherit;
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 0.8rem 2rem;
+  margin: 0.5rem;
+  border: 2px solid #00ffff;
+  background-color: transparent;
   color: #fff;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px #00ffff33;
+}
+.retry-btn:hover, .credits-btn:hover {
+  background-color: #00ffff11;
+  box-shadow: 0 0 20px #00ffffcc;
+  transform: scale(1.05);
 }
 
 .credits-popup {
