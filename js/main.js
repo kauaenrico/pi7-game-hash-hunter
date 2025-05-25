@@ -268,9 +268,9 @@ function gameOver(reason) {
   gameOverTitle.textContent = gameTexts.gameOver.title;
   gameOverMessage.textContent = getRandomMessage(gameTexts.gameOver.messages);
   
-  // Show game over screen
-  gameOverlay.classList.remove('hidden');
-  gameOverScreen.classList.remove('hidden');
+  // Mostra o popup de game over
+  securityTipPopup.classList.add('show');
+  tipContent.textContent = `${gameTexts.gameOver.title}\n\n${getRandomMessage(gameTexts.gameOver.messages)}\n\nPontuação: ${gameState.patchesCollected}/${gameState.totalPatches}`;
   
   // Play game over sound
   playSoundEffect('gameOver');
@@ -356,7 +356,7 @@ function nextLevel() {
 }
 
 // Event Listeners
-startButton.addEventListener('click', () => {
+window.addEventListener('load', () => {
   gameOverlay.classList.add('hidden');
   startScreen.classList.add('hidden');
   initAudio();
@@ -365,8 +365,7 @@ startButton.addEventListener('click', () => {
 });
 
 retryButton.addEventListener('click', () => {
-  gameOverlay.classList.add('hidden');
-  gameOverScreen.classList.add('hidden');
+  securityTipPopup.classList.remove('show');
   gameState.level = 1;
   gameState.mazeSize = { rows: 7, cols: 7 };
   playBackgroundMusic();
@@ -377,7 +376,19 @@ nextLevelButton.addEventListener('click', () => {
   nextLevel();
 });
 
-continueButton.addEventListener('click', continueGame);
+continueButton.addEventListener('click', () => {
+  if (gameState.isGameOver) {
+    // Se estiver em game over, reinicia o jogo
+    securityTipPopup.classList.remove('show');
+    gameState.level = 1;
+    gameState.mazeSize = { rows: 7, cols: 7 };
+    playBackgroundMusic();
+    initGame();
+  } else {
+    // Se não estiver em game over, apenas continua o jogo normalmente
+    continueGame();
+  }
+});
 
 // Initialize game texts when the page loads
 document.addEventListener('DOMContentLoaded', initGameTexts);
