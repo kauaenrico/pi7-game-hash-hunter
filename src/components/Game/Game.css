@@ -1,0 +1,259 @@
+.game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+#gameTitle {
+  font-size: 2.5rem;
+  color: #0f172a;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.font-tech {
+  font-family: 'Share Tech Mono', 'Fira Mono', 'JetBrains Mono', 'Consolas', monospace;
+}
+
+.canvas-container {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 700px) {
+  .canvas-container.center-mobile {
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    min-width: 0;
+    margin: 0 auto 12px auto;
+  }
+}
+
+#gameCanvas {
+  border: 2px solid #0f172a;
+  background-color: #f8fafc;
+}
+
+.game-status {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 600px;
+  padding: 10px;
+  background-color: #f8fafc;
+  border: 2px solid #0f172a;
+  border-radius: 8px;
+}
+
+.status-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.status-item span:first-child {
+  font-weight: bold;
+  color: #0f172a;
+}
+
+.overlay-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(15, 23, 42, 0.9);
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.overlay-screen h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.story-text {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  max-width: 80%;
+}
+
+.instructions {
+  font-size: 1rem;
+  margin-bottom: 30px;
+  max-width: 80%;
+}
+
+.overlay-screen button {
+  padding: 12px 24px;
+  font-size: 1.2rem;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.overlay-screen button:hover {
+  background-color: #2563eb;
+}
+
+.pause-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(15, 23, 42, 0.5);
+  display: none;
+}
+
+.pause-overlay.active {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.security-tip-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  max-width: 80%;
+  z-index: 1000;
+}
+
+.tip-icon {
+  font-size: 2rem;
+}
+
+.tip-content {
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+.continue-button {
+  padding: 10px 24px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.continue-button:hover {
+  background-color: #2563eb;
+}
+
+.hidden {
+  display: none;
+}
+
+.virtual-arrows {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;
+  gap: 0.5rem;
+}
+
+.virtual-arrows .arrow {
+  background: linear-gradient(145deg, #0f172a 60%, #2563eb 100%);
+  color: #fff;
+  border: 2px solid #38bdf8;
+  box-shadow: 0 2px 8px #0ea5e933;
+  border-radius: 16px;
+  width: 56px;
+  height: 56px;
+  margin: 4px;
+  font-size: 2.2rem;
+  opacity: 0.95;
+  font-family: 'Share Tech Mono', monospace;
+  transition: background 0.15s, border 0.15s, transform 0.1s;
+}
+
+.virtual-arrows .arrow:active, .virtual-arrows .arrow:focus {
+  background: #38bdf8;
+  color: #0f172a;
+  border: 2px solid #2563eb;
+  transform: scale(0.95);
+}
+
+.security-tip-popup.show {
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #181f2a;
+  color: #fff;
+  border: 2px solid #38bdf8;
+  box-shadow: 0 4px 24px #0ea5e9aa;
+  padding: 32px 24px 24px 24px;
+  border-radius: 16px;
+  z-index: 1001;
+  min-width: 220px;
+  max-width: 90vw;
+  font-size: 1.1rem;
+}
+
+.security-tip-popup .tip-icon {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+}
+
+.security-tip-popup .tip-content {
+  font-size: 1.15rem;
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+.security-tip-popup .continue-button {
+  padding: 10px 28px;
+  background: #38bdf8;
+  color: #181f2a;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-family: 'Share Tech Mono', monospace;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.15s, color 0.15s;
+}
+
+.security-tip-popup .continue-button:hover {
+  background: #2563eb;
+  color: #fff;
+} 

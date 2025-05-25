@@ -1,9 +1,11 @@
 import React from 'react';
+import { Game } from './components/Game/Game';
+import './index.css';
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <p>Projeto Integrador</p>
+    <div className="App">
+      <Game />
     </div>
   );
 }

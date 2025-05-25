@@ -2,69 +2,15 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Hash Hunter</title>
-  <link rel="stylesheet" href="styles.css">
   <link rel="manifest" href="/manifest.json" />
   <meta name="theme-color" content="#0f172a" />
   <link rel="icon" href="assets/images/logo.png" type="image/png" />
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="game-container">
-    <h1 id="gameTitle">Hash Hunter</h1>
-    <div class="canvas-container">
-      <canvas id="gameCanvas" width="600" height="600"></canvas>
-      <div id="gameOverlay">
-        <div id="startScreen" class="overlay-screen">
-          <h2>Hash Hunter</h2>
-          <div id="storyText" class="story-text"></div>
-          <div id="instructionsText" class="instructions"></div>
-          <button id="startButton">INICIAR MISSÃO</button>
-        </div>
-        <div id="gameOverScreen" class="overlay-screen hidden">
-          <h2 id="gameOverTitle">GAME OVER</h2>
-          <p id="gameOverMessage"></p>
-          <p>Hashes coletados: <span id="finalScore">0/0</span></p>
-          <button id="retryButton">TENTAR NOVAMENTE</button>
-        </div>
-        <div id="levelCompleteScreen" class="overlay-screen hidden">
-          <h2 id="levelCompleteTitle">FASE COMPLETA!</h2>
-          <p id="levelCompleteMessage"></p>
-          <p id="securityTip" class="security-tip"></p>
-          <button id="nextLevelButton">PRÓXIMA FASE</button>
-        </div>
-      </div>
-    </div>
-    <div class="game-status">
-      <div class="status-item">
-        <span id="levelLabel">Nível:</span>
-        <span id="levelDisplay">1</span>
-      </div>
-      <div class="status-item">
-        <span id="hashesLabel">Hashes:</span>
-        <span id="patchCounter">0/0</span>
-      </div>
-      <div class="status-item">
-        <span id="statusLabel">Status:</span>
-        <span id="statusDisplay">Pronto</span>
-      </div>
-      <div class="status-item">
-        <span id="timeLabel">Tempo:</span>
-        <span id="timeDisplay">00:00</span>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Overlay de pausa -->
-  <div id="pauseOverlay" class="pause-overlay"></div>
-  
-  <!-- Pop-up de dicas de segurança -->
-  <div id="securityTipPopup" class="security-tip-popup">
-    <span class="tip-icon">🛡️</span>
-    <span class="tip-content"></span>
-    <button class="continue-button">CONTINUAR</button>
-  </div>
-  
-  <script type="module" src="js/main.js"></script>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>
