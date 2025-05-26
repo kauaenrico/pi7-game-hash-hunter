@@ -367,6 +367,7 @@ body {
 .start-desc {
   font-size: 1.1rem;
   color: #ccc;
+  font-weight: bold;
   margin-bottom: 12px;
   text-align: center;
 }
