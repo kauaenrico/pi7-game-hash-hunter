@@ -55,4 +55,4 @@ Se as imagens não forem carregadas, o jogo usará formas geométricas como fall
 - Use cores que contrastem bem com o fundo do labirinto
 - Mantenha o estilo visual consistente entre todas as imagens
 - Considere adicionar um leve efeito de brilho ou sombra para melhor visibilidade
-- Teste as imagens em diferentes tamanhos de tela para garantir boa visibilidade 
+- Teste as imagens em diferentes tamanhos de tela para garantir boa visibilidade
