@@ -208,9 +208,9 @@ private spritesReady = false;
     });
 
   return Promise.all([
-    load('./public/assets/images/old/player.png'),
-    load('./public/assets/images/old/virus.png'),
-    load('./public/assets/images/old/hash.png')
+    load('./assets/images/old/player.png'),
+    load('./assets/images/old/virus.png'),
+    load('./assets/images/old/hash.png')
   ]).then(([p, v, h]) => {
     this.playerImg = p;
     this.virusImg  = v;
