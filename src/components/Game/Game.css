@@ -125,7 +125,7 @@ body {
 }
 
 .start-logo {
-  width: 300px;
+  width: 200px;
   margin-top: -20px;
   margin-bottom: -20px;
 }
@@ -488,4 +488,14 @@ body {
 .virtual-arrows-old .arrow-old:active, .virtual-arrows-old .arrow-old:focus {
   background: #2563eb;
   color: #fff;
+}
+
+.fade-in {
+  opacity: 0;
+  animation: fadeInStory 1.2s forwards;
+}
+@keyframes fadeInStory {
+  to {
+    opacity: 1;
+  }
 } 
