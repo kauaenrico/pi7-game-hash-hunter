@@ -225,7 +225,7 @@ export const Game: React.FC = () => {
     return (
       <div className="game-container font-tech">
         <div className="start-menu">
-          <img src='./public/assets/images/logo-teste.png' alt="Logo" className="start-logo" />
+          <img src='./assets/images/logo-teste.png' alt="Logo" className="start-logo" />
           <h1 className="start-title">
   <span className="hash-color">Hash </span>
   <span className="hunter-color">Hunter</span>
