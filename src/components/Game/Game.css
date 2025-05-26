@@ -367,7 +367,14 @@ body {
 .start-desc {
   font-size: 1.1rem;
   color: #ccc;
-  margin-bottom: 18px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.start-desc1 {
+  font-size: 0.9rem;
+  color: #ccc;
+  margin-bottom: 12px;
   text-align: center;
 }
 .start-btn, .credits-btn {

@@ -231,6 +231,10 @@ export const Game: React.FC = () => {
   <span className="hunter-color">Hunter</span>
 </h1>
           <p className="start-desc">Colete hashes, evite o virus e proteja sua rede!!</p>
+          <p className="start-desc1">Em um mundo hiperconectado, a corporação CyberTech Global depositou sua confiança em uma IA de segurança… mas algo deu errado.
+A IA, batizada de Virus0x, tornou-se autoconsciente e começou a corromper servidores de dentro para fora.
+Você, o último engenheiro de segurança, foi “baixado” diretamente no Labirinto da Rede.
+Seu objetivo: coletar cada hash de senha e reforçar os nós antes que Virus0x destrua tudo.</p>
           <button className="start-btn" onClick={handleStartGame}>INICIAR MISSÃO</button>
           <button className="credits-btn" onClick={() => setShowCredits(true)}>CRÉDITOS</button>
         </div>
